@@ -21,7 +21,7 @@ class Board
   def puttable?(color)
     @board.each.with_index do |line, y|
       line.each.with_index do |cell, x|
-        return true if self.try_put(x, y, cell)
+        return true if self.try_put(x, y, color, true)
       end
     end
     false
@@ -78,7 +78,7 @@ class Board
     end
   end
 
-  def try_put(x, y, color)
+  def try_put(x, y, color, dry_run=false)
     return false if get_stone(x, y) != Cell::NONE
 
     lines = [
@@ -88,12 +88,14 @@ class Board
     ].select { |dx, dy| try_put_line(x, y, dx, dy, color) }
 
     return false if lines.empty?
+    return true if dry_run
 
     lines.each { |dx, dy| put_line!(x, y, dx, dy, color)}
     true
   end
 
   def put_stone(x, y, color)
+    puts "put_stone (#{x}, #{y}) -> #{color}"
     @board[y][x] = color
   end
 
