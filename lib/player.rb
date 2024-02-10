@@ -8,10 +8,6 @@ class Player
     false
   end
 
-  def set_color(color)
-    @color = color
-  end
-
   def put_stone(x, y)
     puts "Player.put_stone(#{x}, #{y})"
     if @board.try_put(x, y, @color) 
