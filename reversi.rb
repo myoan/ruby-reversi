@@ -26,7 +26,11 @@ class Reversi < (Example rescue Gosu::Window)
   end
 
   def draw
-    @font.draw_text("next: #{Cell.name(@game.active_player_color)}", 0, BOARD_LEN * CELL_SIZE, 1, 1, 1, Gosu::Color::WHITE)
+    if @game.finished?
+      @font.draw_text("#{Cell.name(@game.winner)} win! (press ESC)", 0, BOARD_LEN * CELL_SIZE, 1, 1, 1, Gosu::Color::WHITE)
+    else
+      @font.draw_text("next: #{Cell.name(@game.active_player_color)}", 0, BOARD_LEN * CELL_SIZE, 1, 1, 1, Gosu::Color::WHITE)
+    end
     b_score, w_score = @board.score
     @font.draw_text("Black: #{b_score}, White: #{w_score}", 0, BOARD_LEN * CELL_SIZE + TEXT_HEIGHT, 1, 1, 1, Gosu::Color::WHITE)
     @board.board.each.with_index do |line, y|
@@ -48,6 +52,8 @@ class Reversi < (Example rescue Gosu::Window)
       x = (mouse_x / CELL_SIZE).floor
       y = (mouse_y / CELL_SIZE).floor
       @game.notify(x, y)
+    when Gosu::KB_ESCAPE
+      close
     end
   end
 end
