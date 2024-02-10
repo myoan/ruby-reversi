@@ -8,10 +8,10 @@ class Board
     @size = size
     @board = Array.new(size) { Array.new(size) { Cell::NONE }}
 
-    @board[size / 2 - 1][size / 2 - 1] = Cell::BLACK
-    @board[size / 2][size / 2]         = Cell::BLACK
-    @board[size / 2 - 1][size / 2]     = Cell::WHITE
-    @board[size / 2][size / 2 - 1]     = Cell::WHITE
+    put_stone(size/2-1, size/2-1, Cell::BLACK)
+    put_stone(size/2,   size/2,   Cell::BLACK)
+    put_stone(size/2-1, size/2,   Cell::WHITE)
+    put_stone(size/2,   size/2-1, Cell::WHITE)
   end
 
   def filled?
@@ -53,14 +53,14 @@ class Board
     next_x = x + dx
     next_y = y + dy
     return false if !is_inside?(next_x, next_y)
-    return false if @board[next_y][next_x] != Cell.other(color)
+    return false if get_stone(next_x, next_y) != Cell.other(color)
 
     loop do
       next_x += dx
       next_y += dy
       return false if !is_inside?(next_x, next_y)
-      return false if @board[next_y][next_x] == Cell::NONE
-      return true if @board[next_y][next_x] == color
+      return false if get_stone(next_x, next_y) == Cell::NONE
+      return true if get_stone(next_x, next_y) == color
     end
 
     false
@@ -74,21 +74,18 @@ class Board
       next_x += dx
       next_y += dy
       return if !self.is_inside?(next_x, next_y)
-      return if @board[next_y][next_x] == color
+      return if get_stone(next_x, next_y) == color
     end
   end
 
   def try_put(x, y, color)
-    puts "tring to (#{x}, #{y}, #{@board[y][x]}): #{color} ..."
-    return false if @board[y][x] != Cell::NONE
+    return false if get_stone(x, y) != Cell::NONE
 
     lines = [
       [-1, -1], [0, -1], [1, -1],
       [-1, 0], [1, 0],
       [-1, 1], [0, 1], [1, 1],
     ].select { |dx, dy| try_put_line(x, y, dx, dy, color) }
-
-    puts "lines: #{lines}"
 
     return false if lines.empty?
 
@@ -98,5 +95,9 @@ class Board
 
   def put_stone(x, y, color)
     @board[y][x] = color
+  end
+
+  def get_stone(x, y)
+    @board[y][x]
   end
 end
