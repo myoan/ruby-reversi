@@ -2,6 +2,19 @@ module Cell
   NONE  = 0
   BLACK = 1
   WHITE = 2
+
+  def other(color)
+    case color
+    when Cell::BLACK
+      Cell::WHITE
+    when Cell::WHITE
+      Cell::BLACK
+    when Cell::NONE
+      Cell::NONE
+    end
+  end
+
+  module_function :other
 end
 
 class Game
@@ -29,9 +42,31 @@ class Game
       @active_player = @p1
       @active_player_color = Cell::BLACK
     end
+    puts "turn_change: #{@active_player_color}"
   end
 
   def calc_winner
+  end
+
+  def notify(x, y)
+    putted = @active_player.put_stone(x, y)
+    if finished?
+      calc_winner
+      if @winner == :black
+        puts "black win"
+      elsif @winner == :white
+        puts "black win"
+      else
+        puts "draw"
+      end
+      return
+    end
+
+    return if !putted && @board.puttable?(@active_player_color)
+    @board.show
+    if @board.puttable?(Cell.other(@active_player_color))
+      turn_change
+    end
   end
 end
 
