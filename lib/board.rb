@@ -30,13 +30,14 @@ class Board
     @board.all? { |line| line.none? { |cell| cell == Cell::NONE }}
   end
 
+  def try_put(x, y, color, dry_run=false)
+    # TODO: implement method
+    true
+  end
+
   def puttable?(color)
-    @board.each.with_index do |line, y|
-      line.each.with_index do |cell, x|
-        return true if self.try_put(x, y, color, true)
-      end
-    end
-    false
+    # TODO: implement method
+    true
   end
 
   def show
@@ -53,57 +54,6 @@ class Board
       end
       puts ""
     end
-  end
-
-  def is_inside?(x, y)
-    return false if x < 0 || @size <= x
-    return false if y < 0 || @size <= y
-    true
-  end
-
-  def try_put_line(x, y, dx, dy, color)
-    next_x = x + dx
-    next_y = y + dy
-    return false if !is_inside?(next_x, next_y)
-    return false if get_stone(next_x, next_y) != Cell.other(color)
-
-    loop do
-      next_x += dx
-      next_y += dy
-      return false if !is_inside?(next_x, next_y)
-      return false if get_stone(next_x, next_y) == Cell::NONE
-      return true if get_stone(next_x, next_y) == color
-    end
-
-    false
-  end
-
-  def put_line!(x, y, dx, dy, color)
-    next_x = x + dx
-    next_y = y + dy
-    loop do
-      self.put_stone(next_x, next_y, color)
-      next_x += dx
-      next_y += dy
-      return if !self.is_inside?(next_x, next_y)
-      return if get_stone(next_x, next_y) == color
-    end
-  end
-
-  def try_put(x, y, color, dry_run=false)
-    return false if get_stone(x, y) != Cell::NONE
-
-    lines = [
-      [-1, -1], [0, -1], [1, -1],
-      [-1, 0], [1, 0],
-      [-1, 1], [0, 1], [1, 1],
-    ].select { |dx, dy| try_put_line(x, y, dx, dy, color) }
-
-    return false if lines.empty?
-    return true if dry_run
-
-    lines.each { |dx, dy| put_line!(x, y, dx, dy, color)}
-    true
   end
 
   def put_stone(x, y, color)
