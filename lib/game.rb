@@ -63,6 +63,11 @@ class Game
     end
 
     return if !putted && @board.puttable?(@active_player_color)
+    if @active_player_color == Cell::BLACK
+      puts "BLACK: puts (#{x}, #{y})"
+    else 
+      puts "WHITE: puts (#{x}, #{y})"
+    end
     @board.show
     if @board.puttable?(Cell.other(@active_player_color))
       turn_change
