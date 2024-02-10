@@ -14,6 +14,18 @@ class Board
     put_stone(size/2,   size/2-1, Cell::WHITE)
   end
 
+  def score
+    black = 0
+    white = 0
+    @board.each do |line|
+      line.each do |cell|
+        black += 1 if cell == Cell::BLACK
+        white += 1 if cell == Cell::WHITE
+      end
+    end
+    return black, white
+  end
+
   def filled?
     @board.all? { |line| line.none? { |cell| cell == Cell::NONE }}
   end

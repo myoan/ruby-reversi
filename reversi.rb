@@ -4,12 +4,12 @@ require "./lib/board"
 require "./lib/player"
 
 BOARD_LEN = 8
+TEXT_HEIGHT = 32
 CELL_SIZE = 64
-WIDTH, HEIGHT = 640, 480
 
 class Reversi < (Example rescue Gosu::Window)
   def initialize
-    super BOARD_LEN * CELL_SIZE, BOARD_LEN * CELL_SIZE
+    super BOARD_LEN * CELL_SIZE, BOARD_LEN * CELL_SIZE + 2 * TEXT_HEIGHT
 
     @cell_image  = Gosu::Image.new("media/cell.png")
     @black_image = Gosu::Image.new("media/black.png")
@@ -19,12 +19,16 @@ class Reversi < (Example rescue Gosu::Window)
     player1 = Player.new(@board, Cell::BLACK)
     player2 = Player.new(@board, Cell::WHITE)
     @game = Game.new(@board, player1, player2)
+    @font = Gosu::Font.new(TEXT_HEIGHT)
   end
 
   def update
   end
 
   def draw
+    @font.draw_text("next: #{Cell.name(@game.active_player_color)}", 0, BOARD_LEN * CELL_SIZE, 1, 1, 1, Gosu::Color::WHITE)
+    b_score, w_score = @board.score
+    @font.draw_text("Black: #{b_score}, White: #{w_score}", 0, BOARD_LEN * CELL_SIZE + TEXT_HEIGHT, 1, 1, 1, Gosu::Color::WHITE)
     @board.board.each.with_index do |line, y|
       line.each.with_index do |cell, x|
         if cell == Cell::BLACK

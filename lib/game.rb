@@ -14,7 +14,18 @@ module Cell
     end
   end
 
-  module_function :other
+  def name(color)
+    case color
+    when Cell::BLACK
+      "Black"
+    when Cell::WHITE
+      "White"
+    when Cell::NONE
+      "None"
+    end
+  end
+
+  module_function :other, :name
 end
 
 class Game
