@@ -36,8 +36,12 @@ class Board
   end
 
   def puttable?(color)
-    # TODO: implement method
-    true
+    @board.each.with_index do |line, y|
+      line.each.with_index do |cell, x|
+        return true if self.try_put(x, y, color, true)
+      end
+    end
+    false
   end
 
   def show
